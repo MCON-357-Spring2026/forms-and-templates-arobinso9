@@ -24,15 +24,23 @@ def add_student():
 
         # TODO:
         # 1. Validate name
+        if not name or name.strip() == "":
+            error = "Username is required."
+            username = None
         # 2. Validate grade is number
+        if not grade or not grade.isnumeric():
+            error = "Grade is required."
         # 3. Validate grade range 0–100
-        # 4. Add to students list as dictionary
-        # 5. Redirect to /students
+        grade_numeric = int(grade)
+        if grade_numeric < 0 or grade_numeric > 100:
+            error = "Grade must be between 0 and 100."
+        else:
+            # 4. Add to students list as dictionary
+            students.append({"name": name, "grade": grade_numeric})
+            # 5. Redirect to /students
+            return redirect(url_for("view_students"))
 
-        pass
-
-    return render_template("add.html", error=error)
-
+    return render_template("add.html", error=error, name=name, grade=grade)
 
 # ---------------------------------
 # TODO: IMPLEMENT DISPLAY
