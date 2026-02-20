@@ -1,6 +1,8 @@
 from flask import Flask, render_template, request, redirect, url_for
 
 app = Flask(__name__)
+# we do the math and validation here and then pass the reuslts into the html to be
+# displayed :)
 
 # In-memory storage
 students = []
@@ -17,6 +19,8 @@ def home():
 @app.route("/add", methods=["GET", "POST"])
 def add_student():
     error = None
+    name = ""
+    grade = ""
 
     if request.method == "POST":
         name = request.form.get("name")
@@ -28,7 +32,7 @@ def add_student():
             error = "Username is required."
             username = None
         # 2. Validate grade is number
-        if not grade or not grade.isnumeric():
+        if not grade or not grade.isdigit():
             error = "Grade is required."
         # 3. Validate grade range 0–100
         grade_numeric = int(grade)
@@ -38,13 +42,14 @@ def add_student():
             # 4. Add to students list as dictionary
             students.append({"name": name, "grade": grade_numeric})
             # 5. Redirect to /students
-            return redirect(url_for("view_students"))
+            return redirect(url_for("display_students"))
 
     return render_template("add.html", error=error, name=name, grade=grade)
 
 # ---------------------------------
 # TODO: IMPLEMENT DISPLAY
 # ---------------------------------
+# we pass the student to the students.html where the display happens
 @app.route("/students")
 def display_students():
     return render_template("students.html", students=students)
@@ -62,7 +67,19 @@ def summary():
     # - highest grade
     # - lowest grade
 
-    return render_template("summary.html")
+    if not students:
+        # If the list is empty, we pass None or an empty dict
+        return render_template("summary.html", stats=None)
+
+    grades = [s['grade'] for s in students]
+
+    stats = {
+        "total": len(students),
+        "avg": round(sum(grades) / len(grades), 2),
+        "highest": max(grades),
+        "lowest": min(grades)
+    }
+    return render_template("summary.html", stats=stats)
 
 
 if __name__ == "__main__":

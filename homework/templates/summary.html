@@ -3,7 +3,12 @@
 {% block content %}
 
     <h2>Summary</h2>
-<p><strong>Total Students:</strong> {{ total }}</p>
-<p><strong>Class Average:</strong> {{ avg }}%</p>
-
+{% if stats %}
+    <p><strong>Total Students:</strong> {{ stats.total }}</p>
+    <p><strong>Class Average:</strong> {{ stats.avg }}%</p>
+    <p><strong>Highest Grade:</strong> {{ stats.highest }}</p>
+    <p><strong>Lowest Grade:</strong> {{ stats.lowest }}</p>
+{% else %}
+    <p>No students have been added yet. Go to the "Add" page to get started!</p>
+{% endif %}
 {% endblock %}
