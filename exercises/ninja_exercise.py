@@ -3,6 +3,11 @@ from datetime import datetime
 
 app = Flask(__name__)
 
+#- Handle GET and POST
+#- Use request.form
+#- Validate input
+
+
 
 @app.route("/")
 def home():
